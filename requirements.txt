@@ -1,0 +1,3 @@
+python-docx
+transformers
+python-dotenv

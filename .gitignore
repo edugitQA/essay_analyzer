@@ -1,1 +1,9 @@
+# Ignorar arquivos sensíveis
 .env
+
+# Ignorar outros arquivos desnecessários
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.sqlite3
