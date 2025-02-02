@@ -1,32 +1,38 @@
-from app.file_processor import process_file
-from app.text_analyzer import analyze_text
-from app.feedback_generator import generate_feedback
+import tkinter as tk 
+from tkinter import filedialog
+from modules import data_reader, ai_analyzer, corrector, scorer, feedback_adapter
 
-def main():
-    print("Bem-vindo ao Analisador de Redações!")
-    file_path = input("Insira o caminho do arquivo (.txt ou .docx): ")
 
-    try:
-        # Processar o arquivo
-        original_text = process_file(file_path)
+def analisar_redacao():
+    caminho_arquivo = filedialog.askopenfilename(
+        title="selecionar Arquivo", filetypes=[("Arquivos de Texto", "*.txt"), ("Documentos Word", "*.docx")]
+    )
+    if caminho_arquivo:
+        texto = data_reader.ler_arquivos(caminho_arquivo)
+        banca = entrada_banca.get()
 
-        # Analisar o texto com a API Hugging Face
-        analyzed_text = analyze_text(original_text)
+        analise = ai_analyzer.analisar(texto)
 
-        # Gerar feedback
-        feedback = generate_feedback(original_text, analyzed_text)
+        correcoes = corrector.corrigir(analise)
 
-        # Exibir o feedback
-        print("\n" + feedback)
+        pontuacao = scorer.calcular_pontuacao(analise, banca)
 
-        # Salvar o feedback em um arquivo
-        output_path = "feedback_redacao.txt"
-        with open(output_path, 'w', encoding='utf-8') as file:
-            file.write(feedback)
-        print(f"\nFeedback salvo em: {output_path}")
+        feedback = feedback_adapter.adapter_feedback(correcoes, banca)
 
-    except Exception as e:
-        print(f"Erro: {e}")
+        resultado_text.delete("1.0", tk.END)
+        resultado_text.insert(tk.END, f"Pontuação: {pontuacao}\n\n")
+        resultado_text.insert(tk.END, feedback)
 
-if __name__ == "__main__":
-    main()
+root = tk.Tk()
+root.title("Analisador de Redações")
+
+botao_arquivo = tk.Button(root, text="Selecionar o Arquivo", command=analisar_redacao)
+botao_arquivo.pack(pady=10)
+
+entrada_banca = tk.Entry(root)
+entrada_banca.pack(pady=5)
+
+resultado_text =  tk.Text(root, wrap=Word)
+resultado_text.pack()
+
+root.mainloop()
