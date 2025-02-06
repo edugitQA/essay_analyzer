@@ -1,7 +1,7 @@
 from docx import Document
 
 def ler_arquivos(caminho_arquivo):
-    if caminho_arquivo.endswith("text"):
+    if caminho_arquivo.endswith(".text"):
         with open(caminho_arquivo, "r", encoding="utf-8") as Arquivo:
             return arquivo.read()
     elif caminho_arquivo.endswith(".docx"):
