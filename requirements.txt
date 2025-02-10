@@ -2,4 +2,4 @@ python-docx
 transformers
 python-dotenv
 requests
-gemini
+google-generativeai

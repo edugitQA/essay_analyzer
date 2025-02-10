@@ -42,3 +42,5 @@ resultado_text = tk.Text(root, wrap=tk.WORD)
 resultado_text.pack()
 
 root.mainloop()
+
+

@@ -1,27 +1,67 @@
 import requests
-from config import HUGGINGFACE_API_KEY
+from config import GEMINI_API_KEY
 
 def analisar(texto, banca):
-    prompt = f"Você é um especialista em redação de concursos da banca {banca}. Analise a seguinte redação e forneça feedback detalhado em português para o candidato:\n\nRedação:\n{texto}\n\nFeedback:\n"
-    
-    headers = {
-        'Authorization': f'Bearer {HUGGINGFACE_API_KEY}',
-        'Content-Type': 'application/json'
-    }
-    
+    prompt = f"""Você é um especialista em redação de concursos da banca {banca}. 
+    Analise a seguinte redação e forneça feedback detalhado em português para o candidato, 
+    incluindo sugestões de melhorias gramaticais, ortográficas, de estilo, coesão e coerência, 
+    e uma estimativa da pontuação de acordo com os critérios da banca.
+
+    Redação:
+    {texto}
+
+    Feedback:
+    """
+
+    url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
+
     data = {
-        'inputs': prompt,
-        'parameters': {
-            'max_length': 500,
-            'temperature': 0.7
-        }
+        "contents": [  # Array de conteúdos
+            {
+                "parts": [  # Array de partes (no caso, apenas uma)
+                    {"text": prompt}
+                ]
+            }
+        ]
     }
-    
-    response = requests.post('https://api-inference.huggingface.co/models/EleutherAI/gpt-neox-20b', headers=headers, json=data)
-    
-    if response.status_code == 200:
-        return response.json()[0]['generated_text'].strip()
-    else:
-        print(f"Erro na API: {response.status_code}")
-        print(f"Resposta da API: {response.text}")
+
+    try:
+        response = requests.post(url, json=data)
+        response.raise_for_status()
+
+        response_json = response.json()
+
+        
+        if response_json.get("candidates") and len(response_json["candidates"]) > 0:
+            candidate = response_json["candidates"][0]
+            if candidate.get("content") and candidate["content"].get("parts"):  # Verifica se "content" e "parts" existem
+                parts = candidate["content"]["parts"]
+                feedback = "".join([part.get("text", "") for part in parts]).strip() # Concatena as partes do texto
+                return feedback
+            else:
+                print("A resposta da API não continha as chaves 'content' ou 'parts'.")
+                print(response_json) # imprimir resposta completa 
+                return None
+        else:
+            print("A resposta da API não continha a chave 'candidates' ou estava vazia.")
+            print(response_json) # 
+            return None
+
+    except requests.exceptions.RequestException as e:
+        print(f"Erro na API do Gemini: {e}")
+        if response.status_code != 200:
+            print(f"Código de status: {response.status_code}")
+            try:
+                error_details = response.json()
+                print(f"Detalhes do erro: {error_details}")
+            except:
+                print("Não foi possível decodificar os detalhes do erro.")
+        return None
+
+    except (KeyError, IndexError, TypeError) as e:  # Adicione TypeError para lidar com erros de tipo
+        print(f"Erro ao processar a resposta da API: {e}")
+        try:
+            print(f"Resposta da API: {response_json}")
+        except:
+            print("Não foi possível imprimir a resposta da API.")
         return None
