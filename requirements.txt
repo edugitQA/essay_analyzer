@@ -1,3 +1,5 @@
 python-docx
 transformers
 python-dotenv
+requests
+gemini

@@ -1,25 +1,32 @@
-import tkinter as tk 
+import tkinter as tk
 from tkinter import filedialog
-from modules import data_reader, ai_analyzer, corrector, scorer, feedback_adapter
-
+from modules import data_reader, ai_analyzer
 
 def analisar_redacao():
     caminho_arquivo = filedialog.askopenfilename(
-        title="selecionar Arquivo", filetypes=[("Arquivos de Texto", "*.txt"), ("Documentos Word", "*.docx")]
+        title="Selecionar Arquivo", filetypes=[("Arquivos de Texto", "*.txt"), ("Documentos Word", "*.docx")]
     )
     if caminho_arquivo:
         texto = data_reader.ler_arquivos(caminho_arquivo)
+        if not texto or not texto.strip():
+            resultado_text.delete("1.0", tk.END)
+            resultado_text.insert(tk.END, "Erro: O arquivo está vazio ou não pôde ser lido.\n")
+            return
+        
         banca = entrada_banca.get()
-        analise = ai_analyzer.analisar(texto)
+        if not banca:
+            resultado_text.delete("1.0", tk.END)
+            resultado_text.insert(tk.END, "Erro: Nenhuma banca especificada.\n")
+            return
 
-        correcoes = corrector.corrigir(analise)
+        feedback = ai_analyzer.analisar(texto, banca)
 
-        pontuacao = scorer.calcular_pontuacao(analise, banca)
-
-        feedback = feedback_adapter.adapter_feedback(correcoes, banca)
+        if feedback is None:
+            resultado_text.delete("1.0", tk.END)
+            resultado_text.insert(tk.END, "Erro na análise de texto.\n")
+            return
 
         resultado_text.delete("1.0", tk.END)
-        resultado_text.insert(tk.END, f"Pontuação: {pontuacao}\n\n")
         resultado_text.insert(tk.END, feedback)
 
 root = tk.Tk()

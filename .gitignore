@@ -1,5 +1,5 @@
 # Ignorar arquivos sensíveis
-.env
+
 
 # Ignorar outros arquivos desnecessários
 __pycache__/
@@ -8,3 +8,7 @@ __pycache__/
 *.log
 *.sqlite3
 *.modules
+*.venv
+*config
+
+
