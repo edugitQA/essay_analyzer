@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import font 
 from tkinter import filedialog
 from modules import data_reader, ai_analyzer
 
@@ -44,23 +45,28 @@ def analisar_redacao():
 root = tk.Tk()
 root.title("Analisador de Redações")
 
-# Entrada para especificação da banca examinadora
-tk.Label(root, text="Informe a Banca Examinadora:").pack(pady=5)
-entrada_banca = tk.Entry(root)
-entrada_banca.pack(pady=5)
+## Definindo fontes
+titulo_font = font.Font(family="Helvetica", size=16, weight="bold")
+label_font = font.Font(family="Helvetica", size=12)
+
+# Frame para a banca examinadora
+frame_banca = tk.Frame(root, bg="#f0f0f0")
+frame_banca.pack(pady=10)
+tk.Label(frame_banca, text="Informe a Banca Examinadora:", font=label_font, bg="#f0f0f0").pack(side="left")
+entrada_banca = tk.Entry(frame_banca)
+entrada_banca.pack(side="left", padx=5)
 
 # Botão para seleção de arquivo
-botao_arquivo = tk.Button(root, text="Selecionar o Arquivo", command=selecionar_arquivo)
+botao_arquivo = tk.Button(root, text="Selecionar o Arquivo", command=selecionar_arquivo, bg="#007acc", fg="#ffffff", relief="flat", padx=10, pady=5)
 botao_arquivo.pack(pady=10)
 
 # Label para exibir o arquivo selecionado
-arquivo_label = tk.Label(root, text="Nenhum arquivo selecionado")
+arquivo_label = tk.Label(root, text="Nenhum arquivo selecionado", font=label_font, bg="#f0f0f0")
 arquivo_label.pack(pady=5)
 
 # Área de texto para exibição do resultado
-resultado_text = tk.Text(root, wrap=tk.WORD)
-resultado_text.pack(pady=10)
-
+resultado_text = tk.Text(root, wrap=tk.WORD, font=("Times New Roman", 12))
+resultado_text.pack(pady=10, padx=10)
 # Botão Start
 botao_start = tk.Button(root, text="Analisar", command=analisar_redacao)
 botao_start.pack(pady=10)
