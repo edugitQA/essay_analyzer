@@ -1,4 +1,5 @@
 from docx import Document
+from google.cloud import vision
 
 def ler_arquivos(caminho_arquivo):
     if caminho_arquivo.endswith(".txt"):
@@ -21,3 +22,14 @@ def ler_arquivos(caminho_arquivo):
     else:
         print("Formato de arquivo não suportado.")
         return ""
+
+def ler_texto_da_imagem(caminho_para_imagem):
+    client = vision.ImageAnnotatorClient()
+    with open(caminho_para_imagem, 'rb') as image_file:
+        content = image_file.read()
+    image = vision.Image(content=content)
+    response = client.text_detection(image=image)
+    text = ""
+    for annotation in response.text_annotations:
+        text += annotation.description
+    return text
