@@ -44,15 +44,18 @@ Instale as dependências:
 2. Acesse o Google Cloud Console.
 3. Crie um projeto ou selecione um projeto existente.
 4. Habilite a API do Gemini.
-5. Crie credenciais de API e obtenha sua chave de API.
+5. Crie credenciais de API da AI que for usar e obtenha sua chave de API.
+6. 5. Crie credenciais de API Cloud Vision (Google) e obtenha sua chave de API.
 
 Configure as variáveis de ambiente:
-Crie um arquivo .env na raiz do projeto:
+Crie um arquivo .env/config na raiz do projeto:
    
       touch .env
 
-Adicione a seguinte linha ao arquivo .env, substituindo SUA_CHAVE_DE_API pela sua chave real:
+Adicione a seguinte linhas ao arquivo .env/config, substituindo SUA_CHAVE_DE_API pela sua chave real:
 GEMINI_API_KEY=SUA_CHAVE_DE_API
+GOOGLE_CLOUD_VISION_KEY = local do json da sua chave API.
+
 
 Execução
 Execute o script principal:
