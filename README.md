@@ -45,16 +45,21 @@ Instale as dependências:
 3. Crie um projeto ou selecione um projeto existente.
 4. Habilite a API do Gemini.
 5. Crie credenciais de API da AI que for usar e obtenha sua chave de API.
-6. 5. Crie credenciais de API Cloud Vision (Google) e obtenha sua chave de API.
+6. Crie credenciais de API Cloud Vision (Google) e obtenha sua chave de API.
 
 Configure as variáveis de ambiente:
 Crie um arquivo .env/config na raiz do projeto:
    
-      touch .env
+      touch .env ou config.py
 
 Adicione a seguinte linhas ao arquivo .env/config, substituindo SUA_CHAVE_DE_API pela sua chave real:
-GEMINI_API_KEY=SUA_CHAVE_DE_API
-GOOGLE_CLOUD_VISION_KEY = local do json da sua chave API.
+
+  
+   - `GEMINI_API_KEY=SUA_CHAVE_DE_API`: Para leitura de arquivos .docx
+   - `GOOGLE_CLOUD_VISION_KEY:local do json da sua chave API`: Para tratamento de texto de imagens.
+    
+
+obs: Fique atento à quantidade de Tokens que sua API disponibiliza gratuitamente.
 
 
 Execução
