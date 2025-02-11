@@ -5,7 +5,7 @@ import os
 from modules import data_reader, ai_analyzer  # Certifique-se de que a importação está correta
 from config import GOOGLE_CLOUD_VISION_KEY
 
-# Defina a variável de ambiente para a chave da API do Google Cloud Vision
+# Aqui vc define a variável de ambiente para a chave da API do Google Cloud Vision
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_CLOUD_VISION_KEY
 
 def selecionar_arquivo():
