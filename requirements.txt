@@ -3,3 +3,5 @@ transformers
 python-dotenv
 requests
 google-generativeai
+google-cloud-vision
+Pillow

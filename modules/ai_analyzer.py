@@ -16,9 +16,9 @@ def analisar(texto, banca):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_API_KEY}"
 
     data = {
-        "contents": [  # Array de conteúdos
+        "contents": [
             {
-                "parts": [  # Array de partes (no caso, apenas uma)
+                "parts": [
                     {"text": prompt}
                 ]
             }
@@ -31,20 +31,19 @@ def analisar(texto, banca):
 
         response_json = response.json()
 
-        
         if response_json.get("candidates") and len(response_json["candidates"]) > 0:
             candidate = response_json["candidates"][0]
-            if candidate.get("content") and candidate["content"].get("parts"):  # Verifica se "content" e "parts" existem
+            if candidate.get("content") and candidate["content"].get("parts"):
                 parts = candidate["content"]["parts"]
-                feedback = "".join([part.get("text", "") for part in parts]).strip() # Concatena as partes do texto
+                feedback = "".join([part.get("text", "") for part in parts]).strip()
                 return feedback
             else:
                 print("A resposta da API não continha as chaves 'content' ou 'parts'.")
-                print(response_json) # imprimir resposta completa 
+                print(response_json)
                 return None
         else:
             print("A resposta da API não continha a chave 'candidates' ou estava vazia.")
-            print(response_json) # 
+            print(response_json)
             return None
 
     except requests.exceptions.RequestException as e:
@@ -58,7 +57,7 @@ def analisar(texto, banca):
                 print("Não foi possível decodificar os detalhes do erro.")
         return None
 
-    except (KeyError, IndexError, TypeError) as e:  # Adicione TypeError para lidar com erros de tipo
+    except (KeyError, IndexError, TypeError) as e:
         print(f"Erro ao processar a resposta da API: {e}")
         try:
             print(f"Resposta da API: {response_json}")
