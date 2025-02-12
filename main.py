@@ -1,11 +1,11 @@
-import tkinter as tk
-from tkinter import filedialog, messagebox
-from tkinter import font
 import os
-from modules import data_reader, ai_analyzer  # Certifique-se de que a importação está correta
+import tkinter as tk
+from tkinter import font, filedialog, messagebox, scrolledtext
+from logger_config import logger
+from modules import data_reader, ai_analyzer
 from config import GOOGLE_CLOUD_VISION_KEY
 
-# Aqui vc define a variável de ambiente para a chave da API do Google Cloud Vision
+# Defina aqui a sua variável de ambiente para a chave da API do Google Cloud Vision
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = GOOGLE_CLOUD_VISION_KEY
 
 def selecionar_arquivo():
@@ -27,15 +27,18 @@ def selecionar_arquivo():
             tipo_arquivo = "docx"
         elif caminho_arquivo.endswith((".png", ".jpg", ".jpeg")):
             tipo_arquivo = "imagem"
+        logger.info(f"Arquivo selecionado: {caminho_arquivo}")
     else:
         arquivo_label.config(text="Nenhum arquivo selecionado")
         tipo_arquivo = ""
+        logger.warning("Nenhum arquivo selecionado")
 
 def analisar_redacao():
     global caminho_arquivo, tipo_arquivo
     if not caminho_arquivo:
         resultado_text.delete("1.0", tk.END)
         resultado_text.insert(tk.END, "Erro: Nenhum arquivo selecionado.\n")
+        logger.error("Nenhum arquivo selecionado")
         return
 
     texto = ""
@@ -49,31 +52,46 @@ def analisar_redacao():
         except Exception as e:
             resultado_text.delete("1.0", tk.END)
             resultado_text.insert(tk.END, f"Erro ao ler imagem: {e}\n")
+            logger.error(f"Erro ao ler imagem: {e}")
             return
 
     if not texto or not texto.strip():
         resultado_text.delete("1.0", tk.END)
         resultado_text.insert(tk.END, "Erro: O arquivo está vazio ou não pôde ser lido.\n")
+        logger.error("O arquivo está vazio ou não pôde ser lido")
         return
 
     banca = entrada_banca.get()
     if not banca:
         resultado_text.delete("1.0", tk.END)
         resultado_text.insert(tk.END, "Erro: Nenhuma banca especificada.\n")
+        logger.error("Nenhuma banca especificada")
         return
 
     feedback = ai_analyzer.analisar(texto, banca)
     if feedback is None:
         resultado_text.delete("1.0", tk.END)
         resultado_text.insert(tk.END, "Erro na análise de texto.\n")
+        logger.error("Erro na análise de texto")
         return
 
     digitar_texto(resultado_text, feedback)
+    logger.info("Análise de redação concluída com sucesso")
 
 def digitar_texto(widget, texto, indice=0):
     if indice < len(texto):
         widget.insert(tk.END, texto[indice])
-        widget.after(15, digitar_texto, widget, texto, indice + 1)
+        widget.after(25, digitar_texto, widget, texto, indice + 1)
+
+def visualizar_logs():
+    logs_window = tk.Toplevel(root)
+    logs_window.title("Logs")
+    logs_window.geometry("600x400")
+    logs_text = scrolledtext.ScrolledText(logs_window, wrap=tk.WORD, font=("Times New Roman", 12))
+    logs_text.pack(pady=10, padx=10, fill=tk.BOTH, expand=True)
+    
+    with open('app.log', 'r') as log_file:
+        logs_text.insert(tk.END, log_file.read())
 
 root = tk.Tk()
 root.title("Analisador de Redações")
@@ -101,5 +119,9 @@ resultado_text.pack(pady=10, padx=10)
 botao_start = tk.Button(root, text="Analisar", command=analisar_redacao,
                         bg="#28a745", fg="#ffffff", relief="flat", padx=10, pady=5)
 botao_start.pack(pady=10)
+
+botao_logs = tk.Button(root, text="Visualizar Logs", command=visualizar_logs,
+                       bg="#007acc", fg="#ffffff", relief="flat", padx=10, pady=5)
+botao_logs.pack(pady=10)
 
 root.mainloop()
