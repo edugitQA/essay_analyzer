@@ -1,6 +1,6 @@
 # Essay Analyzer
 
-Este projeto é uma aplicação em Python para análise e correção de redações utilizando a API do Gemini. A aplicação realiza uma análise completa das redações, fornecendo feedback detalhado e estimativas de pontuação.
+Este projeto é uma aplicação em Python para análise e correção de redações utilizando a API do Gemini juntamente com API do google Cloud Vision para tratamento de imagens. A aplicação realiza uma análise completa das redações, fornecendo feedback detalhado e estimativas de pontuação.
 
 ## Funcionalidades
 
