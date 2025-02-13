@@ -10,6 +10,7 @@ __pycache__/
 *.modules
 *.venv
 config.py
+app
 
 
 

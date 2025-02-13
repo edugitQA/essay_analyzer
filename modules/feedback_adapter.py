@@ -2,7 +2,7 @@ def adaptar_feedback(analise, banca):
     feedback = f"Análise da redação para a banca '{banca}':\n\n"
     
     for resultado in analise:
-        # Iterar sobre os itens da lista em 'resultado'
+       
         for item in resultado:
             label = item['label']
             score = item['score']
