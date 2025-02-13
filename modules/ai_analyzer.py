@@ -49,7 +49,7 @@ def analisar(texto, banca):
                 return None
         else:
             logger.error("A resposta da API não continha a chave 'candidates' ou estava vazia.")
-            logger.debug(f"Reposta JSON: {response_json}")
+            logger.debug(f"Resposta JSON: {response_json}")
             return None
 
     except requests.exceptions.RequestException as e:

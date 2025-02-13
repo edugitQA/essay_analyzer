@@ -18,6 +18,7 @@ def selecionar_arquivo():
             ("Imagens", "*.png;*.jpg;*.jpeg") 
         ]
     )
+    
     if caminho_arquivo:
         arquivo_label.config(text=f"Arquivo selecionado: {caminho_arquivo}")
         tipo_arquivo = ""
