@@ -1,4 +1,5 @@
 import requests
+from logger_config import   logger
 from config import GEMINI_API_KEY
 
 def analisar(texto, banca):
@@ -26,41 +27,46 @@ def analisar(texto, banca):
     }
 
     try:
+        logger.info("Enviando solicitaçõa para API do Gemini")
         response = requests.post(url, json=data)
         response.raise_for_status()
+        logger.info("Resposta recebida com sucesso da API")
 
         response_json = response.json()
+        logger.debug("Resposta da API: {response_json}")
 
         if response_json.get("candidates") and len(response_json["candidates"]) > 0:
             candidate = response_json["candidates"][0]
             if candidate.get("content") and candidate["content"].get("parts"):
                 parts = candidate["content"]["parts"]
                 feedback = "".join([part.get("text", "") for part in parts]).strip()
+                logger.info("Feedback gerado com sucesso pela API do Gemini")
                 return feedback
             else:
-                print("A resposta da API não continha as chaves 'content' ou 'parts'.")
-                print(response_json)
+
+                locals.error("A resposta da API não continha as chaves 'content' ou 'parts'.")
+                logger.debug(f"Resposta JSON: {response_json}")
                 return None
         else:
-            print("A resposta da API não continha a chave 'candidates' ou estava vazia.")
-            print(response_json)
+            logger.error("A resposta da API não continha a chave 'candidates' ou estava vazia.")
+            logger.debug(f"Reposta JSON: {response_json}")
             return None
 
     except requests.exceptions.RequestException as e:
-        print(f"Erro na API do Gemini: {e}")
+        logger.error(f"Erro na API do Gemini: {e}")
         if response.status_code != 200:
-            print(f"Código de status: {response.status_code}")
+            logger.error(f"Código de status: {response.status_code}")
             try:
                 error_details = response.json()
-                print(f"Detalhes do erro: {error_details}")
+                logger.error(f"Detalhes do erro: {error_details}")
             except:
-                print("Não foi possível decodificar os detalhes do erro.")
+                logger.error("Não foi possível decodificar os detalhes do erro.")
         return None
 
     except (KeyError, IndexError, TypeError) as e:
-        print(f"Erro ao processar a resposta da API: {e}")
+        logger.error(f"Erro ao processar a resposta da API: {e}")
         try:
-            print(f"Resposta da API: {response_json}")
+            logger.debug(f"Resposta da API: {response_json}")
         except:
-            print("Não foi possível imprimir a resposta da API.")
+            logger.error("Não foi possível imprimir a resposta da API.")
         return None
