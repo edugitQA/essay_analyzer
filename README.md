@@ -8,6 +8,7 @@ Este projeto é uma aplicação em Python para análise e correção de redaçõ
 - **Feedback Detalhado:** O sistema gera um feedback detalhado em português, com sugestões de melhorias e explicações sobre os erros encontrados.
 - **Estimativa de Pontuação:** Com base na análise, o sistema estima a pontuação da redação de acordo com os critérios da banca examinadora especificada.
 - **Interface Gráfica:** O sistema possui uma interface gráfica simples e intuitiva, que permite ao usuário inserir o texto da redação, selecionar a banca examinadora e visualizar o feedback e a pontuação estimada.
+- **Visualiação logs:** Possui a funcionalidade de visualizaçao dos logs da aplicação em tempo real.
 
 ## Requisitos
 
